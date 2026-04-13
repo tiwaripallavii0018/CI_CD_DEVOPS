@@ -1,0 +1,24 @@
+name: NodeJS application CI/CD pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SHH_HOST }}
+          username: root
+          key: ${{ secrets.SHH_KEY }}
+          script: |
+            cd /root/Nodejs-application-CICD-pipeline
+            git pull
+            docker compose up -d --build
